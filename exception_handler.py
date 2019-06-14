@@ -3,20 +3,20 @@ Created on 2019年4月8日
 
 @author: bkd
 '''
-import sys
 from tkinter import Tk, Label
-from traceback import format_exception
+from tkinter.constants import W, LEFT
+import traceback
 
 
-class global_exception_hander:
-
-    def new_except_hook(self, etype, evalue, tb):
-        err_msg = ''.join(format_exception(etype, evalue, tb))
-        print(err_msg)
-        win = Tk(className="系统异常")
-        Label(win, text=err_msg).pack()
-        win.mainloop()
-    
 #     注册全局异常处理类
-    def patch_excepthook(self):
-        sys.excepthook = self.new_except_hook
+def show_error(*args):
+    err_msg = "".join(traceback.format_exception(*args))
+    print(err_msg)
+    win = Tk(className="系统异常")
+    Label(win, text=err_msg,
+          anchor=W, justify=LEFT).pack()
+    win.mainloop()
+
+
+def set_global_callback(parent):
+    parent._root().report_callback_exception = show_error
